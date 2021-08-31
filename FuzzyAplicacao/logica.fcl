@@ -1,0 +1,85 @@
+FUNCTION_BLOCK teste
+
+	VAR_INPUT
+		fazExercicio : REAL;
+		comeForaDeHora : REAL;
+	END_VAR
+	
+	VAR_OUTPUT
+		fatorAtividade : REAL;
+	END_VAR
+	
+	FUZZIFY fazExercicio
+		TERM nao := (0.0, 1) (8.0, 1) (24.0, 0);
+		TERM asVezes := (8.0, 0) (24.0, 1) (43.0, 1) (52.0, 0);
+		TERM regularmente := (38.0, 0) (52.0, 1) (75.0, 1) (85.0, 0);
+		TERM sempre := (75.0, 0) (85.0, 1) (100.0, 1);
+	END_FUZZIFY
+	
+	FUZZIFY comeForaDeHora
+		TERM nunca := (0.0, 1) (18.0, 1) (30.0, 0);
+		TERM raramente := (18.0, 0) (30.0, 1) (42.0, 1) (50.0, 0);
+		TERM asVezes := (42.0, 0) (50.0, 1) (58.0, 1) (70.0, 0);
+		TERM frequentemente := (58.0, 0) (70.0, 1) (85.0, 1) (90.0, 0);
+		TERM sempre := (85.0, 0) (90.0, 1) (100.0, 1);
+	END_FUZZIFY
+
+	DEFUZZIFY fatorAtividade
+		TERM pessimo := (0.0, 1) (18.0, 1) (30.0, 0);
+		TERM ruim := (18.0, 0) (30.0, 1) (42.0, 1) (50.0, 0);
+		TERM regular := (42.0, 0) (50.0, 1) (58.0, 1) (70.0, 0);
+		TERM bom := (58.0, 0) (70.0, 1) (85.0, 1) (90.0, 0);
+		TERM otimo := (85.0, 0) (90.0, 1) (100.0, 1);
+		METHOD : COG;
+		DEFAULT := 0;
+	END_DEFUZZIFY
+	
+	RULEBLOCK No1
+		AND : MIN;
+		ACT : MIN;
+		ACCU : MAX;
+		RULE 1 : IF fazExercicio IS nao AND comeForaDeHora IS nunca
+			THEN fatorAtividade IS regular;
+		RULE 2 : IF fazExercicio IS nao AND comeForaDeHora IS raramente
+			THEN fatorAtividade IS regular;
+		RULE 3 : IF fazExercicio IS nao AND comeForaDeHora IS asVezes
+			THEN fatorAtividade IS ruim;
+		RULE 4 : IF fazExercicio IS nao AND comeForaDeHora IS frequentemente
+			THEN fatorAtividade IS pessimo;
+		RULE 5 : IF fazExercicio IS nao AND comeForaDeHora IS sempre
+			THEN fatorAtividade IS pessimo;
+			
+		RULE 6 : IF fazExercicio IS asVezes AND comeForaDeHora IS nunca
+			THEN fatorAtividade IS bom;
+		RULE 7 : IF fazExercicio IS asVezes AND comeForaDeHora IS raramente
+			THEN fatorAtividade IS bom;
+		RULE 8 : IF fazExercicio IS asVezes AND comeForaDeHora IS asVezes
+			THEN fatorAtividade IS regular;
+		RULE 9 : IF fazExercicio IS asVezes AND comeForaDeHora IS frequentemente
+			THEN fatorAtividade IS ruim;
+		RULE 10 : IF fazExercicio IS asVezes AND comeForaDeHora IS sempre
+			THEN fatorAtividade IS pessimo;
+			
+		RULE 11 : IF fazExercicio IS regularmente AND comeForaDeHora IS nunca
+			THEN fatorAtividade IS otimo;
+		RULE 12 : IF fazExercicio IS regularmente AND comeForaDeHora IS raramente
+			THEN fatorAtividade IS bom;
+		RULE 13 : IF fazExercicio IS regularmente AND comeForaDeHora IS asVezes
+			THEN fatorAtividade IS regular;
+		RULE 14 : IF fazExercicio IS regularmente AND comeForaDeHora IS frequentemente
+			THEN fatorAtividade IS regular;
+		RULE 15 : IF fazExercicio IS regularmente AND comeForaDeHora IS sempre
+			THEN fatorAtividade IS ruim;
+			
+		RULE 16 : IF fazExercicio IS sempre AND comeForaDeHora IS nunca
+			THEN fatorAtividade IS otimo;
+		RULE 17 : IF fazExercicio IS sempre AND comeForaDeHora IS raramente
+			THEN fatorAtividade IS otimo;
+		RULE 18 : IF fazExercicio IS sempre AND comeForaDeHora IS asVezes
+			THEN fatorAtividade IS bom;
+		RULE 19 : IF fazExercicio IS sempre AND comeForaDeHora IS frequentemente
+			THEN fatorAtividade IS bom;
+		RULE 20 : IF fazExercicio IS sempre AND comeForaDeHora IS sempre
+			THEN fatorAtividade IS regular;
+	END_RULEBLOCK
+END_FUNCTION_BLOCK

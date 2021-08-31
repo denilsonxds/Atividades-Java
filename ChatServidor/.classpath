@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="ChatServidor/src"/>
+	<classpathentry kind="lib" path="__MACOSX/ChatServidor/dist/._ChatServidor.jar"/>
+	<classpathentry kind="lib" path="ChatServidor/dist/ChatServidor.jar"/>
+	<classpathentry kind="output" path="ChatServidor/build/classes"/>
+</classpath>
